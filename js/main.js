@@ -295,54 +295,285 @@ class Cubes {
 
         document.addEventListener("keydown", keyPush);
 
-        let dir = 0;
+        //let dir = 0;
+
+        let move = '';
+
+        let lets = true;
 
         function keyPush(evt) {
             switch(evt.keyCode){
                 case 37:
                     console.log('LEFT');
-                    dir = 1;
+                    move = 'left';
                     break;
                 case 38:
                     console.log('UP');
-                    dir = 3;
+                    move = 'up';
                     break;
                 case 39:
                     console.log('RIGHT');
-                    dir = 2;
+                    move = 'right';
                     break;
                 case 40:
                     console.log('DOWN');
-                    dir = 4;
+                    move = 'down';
                     break;
+                case 32:
+                    lets = false;
             }
         }
 
-        function move(){
-            //Cubes.scene.add(group);
-            switch(dir){
-                case 1:
-                    moveLeft();
-                    group.rotation.y += 0.1570796325;
-                    break;
-                case 2:
-                    moveRight();
-                    group.rotation.y -= 0.1570796325;
-                    break;
-                case 3:
-                    moveUp();
-                    group.rotation.x += 0.1570796325;
-                    break;
-                case 4:
-                    moveDown();
-                    group.rotation.x -= 0.1570796325;
-                    break;
+        const rollForward = () =>{
+            //positions_assignment
+            previousPos.xsP = currentPos.xsP;
+            previousPos.ysP = currentPos.ysP;
+            previousPos.zsP = currentPos.zsP;
+            //wall_cases:
+            if (currentPos.zsP > -25 && currentPos.zsP < 25 && currentPos.ysP === 25){
+                currentPos.zsP += 5;
             }
+            else if(currentPos.zsP > -25 && currentPos.zsP < 25 && currentPos.ysP === -25){
+                currentPos.zsP -= 5;
+            }
+            else if(currentPos.ysP < 25 && currentPos.ysP > -25 && currentPos.zsP === 25){
+                currentPos.ysP -= 5;
+            }
+            else if(currentPos.ysP < 25 &&  currentPos.ysP > -25 && currentPos.zsP === -25){
+                currentPos.ysP += 5;
+            }
+            //corner_edge_cases:
+            else if(currentPos.ysP === 25 && currentPos.zsP === 25){
+                currentPos.ysP -= 5;
+            }
+            else if(currentPos.ysP === 25 && currentPos.zsP === -25){
+                currentPos.zsP += 5;
+            }
+            else if(currentPos.ysP === -25 && currentPos.zsP === 25){
+                currentPos.zsP -= 5;
+            }
+            else if(currentPos.ysP === -25 && currentPos.zsP === -25){
+                currentPos.ysP += 5;
+            }
+        }
+
+        const pitchForward = () =>{
+            //positions_assignment
+            previousPos.xsP = currentPos.xsP;
+            previousPos.ysP = currentPos.ysP;
+            previousPos.zsP = currentPos.zsP;
+            //wall_cases:
+            if (currentPos.xsP > -25 && currentPos.xsP < 25 && currentPos.zsP === 25){
+                currentPos.xsP += 5;
+            }
+            else if(currentPos.xsP > -25 && currentPos.xsP < 25 && currentPos.zsP === -25){
+                currentPos.xsP -= 5;
+            }
+            else if(currentPos.zsP < 25 && currentPos.zsP > -25 && currentPos.xsP === 25){
+                currentPos.zsP -= 5;
+            }
+            else if(currentPos.zsP < 25 &&  currentPos.zsP > -25 && currentPos.xsP === -25){
+                currentPos.zsP += 5;
+            }
+            //corner_edge_cases:
+            else if(currentPos.xsP === 25 && currentPos.zsP === 25){
+                currentPos.zsP -= 5;
+            }
+            else if(currentPos.xsP === 25 && currentPos.zsP === -25){
+                currentPos.xsP -= 5;
+            }
+            else if(currentPos.xsP === -25 && currentPos.zsP === 25){
+                currentPos.xsP += 5;
+            }
+            else if(currentPos.xsP === -25 && currentPos.zsP === -25){
+                currentPos.zsP += 5;
+            }
+        }
+        function d() {
+            previousPos.xsP = currentPos.xsP;
+            previousPos.ysP = currentPos.ysP;
+            previousPos.zsP = currentPos.zsP;
+            if(currentPos.zsP === 25 ){
+                switch(move){
+                    case 'right':
+                        if(currentPos.xsP < 25 && currentPos.xsP >= -25){
+                            currentPos.xsP += 5;
+                        }
+                        else if(currentPos.xsP === 25){
+                            currentPos.zsP -= 5;
+                        }
+                        group.rotation.y -= 0.1570796325;
+                        
+                        break;
+                    case 'left':
+                        if(currentPos.xsP <= 25 && currentPos.xsP > -25){
+                            currentPos.xsP -= 5;
+                        }
+                        else if(currentPos.xsP === -25){
+                            currentPos.zsP -= 5;
+                        }
+                        group.rotation.y += 0.1570796325;
+                        break;
+                    case 'down':
+                        if(currentPos.ysP <= 25 && currentPos.ysP > -25){
+                            currentPos.ysP -= 5;
+                            group.rotation.x -= 0.1570796325;
+                        }
+                        break;
+                    case 'up':
+                        if(currentPos.ysP < 25 && currentPos.ysP >= -25){
+                            currentPos.ysP += 5;
+                            group.rotation.x += 0.1570796325;
+                        }
+                        break;
+                }
+            }
+            else if(currentPos.zsP === -25 ){
+                switch(move){
+                    case 'right':
+                        if(currentPos.xsP <= 25 && currentPos.xsP > -25){
+                            currentPos.xsP -= 5;
+                        }
+                        else if(currentPos.xsP === -25){
+                            currentPos.zsP += 5;
+                        }
+                        group.rotation.y -= 0.1570796325;
+                        break;
+                    case 'left':
+                        if(currentPos.xsP < 25 && currentPos.xsP >= -25){
+                            currentPos.xsP += 5;
+                        }
+                        else if(currentPos.xsP === 25){
+                            currentPos.zsP += 5;
+                        }
+                        group.rotation.y += 0.1570796325;
+                        break;
+                    case 'down':
+                        if(currentPos.ysP <= 25 && currentPos.ysP > -25){
+                            currentPos.ysP -= 5;
+                            group.rotation.x -= 0.1570796325;
+                        }
+                        break;
+                    case 'up':
+                        if(currentPos.ysP < 25 && currentPos.ysP >= -25){
+                            currentPos.ysP += 5;
+                            group.rotation.x += 0.1570796325;
+                        }
+                        break;
+                }
+            }
+            else if(currentPos.xsP === 25 ){
+                switch(move){
+                    case 'right':
+                        if(currentPos.zsP <= 25 && currentPos.zsP > -25){
+                            currentPos.zsP -= 5;
+                        }
+                        else if(currentPos.zsP === -25){
+                            currentPos.xsP -= 5;
+                        }
+                        group.rotation.y -= 0.1570796325;
+                        break;
+                    case 'left':
+                        if(currentPos.zsP < 25 && currentPos.zsP >= -25){
+                            currentPos.zsP += 5;
+                        }
+                        else if(currentPos.zsP === 25){
+                            currentPos.xsP -= 5;
+                        }
+                        group.rotation.y += 0.1570796325;
+                        break;
+                    case 'down':
+                        if(currentPos.ysP <= 25 && currentPos.ysP > -25){
+                            currentPos.ysP -= 5;
+                            group.rotation.z += 0.1570796325;
+                        }
+                        break;
+                    case 'up':
+                        if(currentPos.ysP < 25 && currentPos.ysP >= -25){
+                            currentPos.ysP += 5;
+                            group.rotation.z -= 0.1570796325;
+                        }
+                        break;
+                }
+            }
+            else if(currentPos.xsP === -25 ){
+                switch(move){
+                    case 'right':
+                        if(currentPos.zsP < 25 && currentPos.zsP >= -25){
+                            currentPos.zsP += 5;
+                        }
+                        else if(currentPos.zsP === 25){
+                            currentPos.xsP += 5;
+                        }
+                        group.rotation.y -= 0.1570796325;
+                        break;
+                    case 'left':
+                        if(currentPos.zsP <= 25 && currentPos.zsP > -25){
+                            currentPos.zsP -= 5;
+                        }
+                        else if(currentPos.zsP === -25){
+                            currentPos.xsP -= 5;
+                        }
+                        group.rotation.y += 0.1570796325;
+                        break;
+                    case 'down':
+                        if(currentPos.ysP <= 25 && currentPos.ysP > -25){
+                            currentPos.ysP -= 5;
+                            group.rotation.z -= 0.1570796325;
+                        }
+                        break;
+                    case 'up':
+                        if(currentPos.ysP < 25 && currentPos.ysP >= -25){
+                            currentPos.ysP += 5;
+                            group.rotation.z += 0.1570796325;
+                        }
+                        break;
+                }
+            }
+            /* else if(currentPos.ysP === 25 ){
+                switch(move){
+                    case 'right':
+                        currentPos.zsP -= 5;
+                        break;
+                    case 'left':
+                        currentPos.zsP += 5;
+                        break;
+                    case 'down':
+                        currentPos.xsP += 5;
+                        break;
+                    case 'up':
+                        currentPos.xsP -= 5;
+                }
+            }
+            else if(currentPos.ysP === -25 ){
+                if(){};
+                switch(move){
+                    case 'right':
+                        currentPos.zsP -= 5;
+                        break;
+                    case 'left':
+                        currentPos.zsP += 5;
+                        break;
+                    case 'down':
+                        currentPos.xsP += 5;
+                        break;
+                    case 'up':
+                        currentPos.xsP -= 5;
+                }
+            } */
+        }
+
+        function moveCube(){
+            d();
             changeOne();
-            console.log(group.rotation.y)
+            //Cubes.scene.add(group);
+            console.log(currentPos);
+            console.log(group.rotation);
             Cubes.renderer.render(Cubes.scene, Cubes.camera);
         }
-        setInterval(move,1000/11);
+        setInterval(moveCube,200);
+        //group.rotation.z = -0.47123889750000003
+        //moveCube(); 
     }
 }
 
